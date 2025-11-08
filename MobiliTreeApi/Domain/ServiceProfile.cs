@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MobiliTreeApi.Domain
 {
@@ -21,6 +22,13 @@ namespace MobiliTreeApi.Domain
 
         public int StartHour { get; set; }
         public int EndHour { get; set; }
+        public decimal PricePerHour { get; set; }
+    }
+
+    public class ActualTimeSlot
+    {
+        public DateTime StartTimeSlotDateTime { get; set; }
+        public DateTime EndTimeSlotDateTime { get; set; }
         public decimal PricePerHour { get; set; }
     }
 }
