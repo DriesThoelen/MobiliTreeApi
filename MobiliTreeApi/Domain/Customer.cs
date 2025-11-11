@@ -13,7 +13,7 @@ namespace MobiliTreeApi.Domain
         {
             Id = id;
             Name = name;
-            ContractedParkingFacilityIds = contractedParkingFacilityIds.ToList();
+            ContractedParkingFacilityIds = [.. contractedParkingFacilityIds];
         }
 
         public string Id { get; set; }

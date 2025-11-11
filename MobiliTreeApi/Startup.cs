@@ -28,7 +28,7 @@ namespace MobiliTreeApi
             services.AddTransient<IInvoiceService, InvoiceService>();
             services.AddSingleton(FakeData.GetSeedCustomers());
             services.AddSingleton(FakeData.GetSeedServiceProfiles());
-            services.AddSingleton(FakeData.GetSeedSessions());
+            services.AddSingleton(FakeData.GetSeedSessions()); //Singleton pattern
 
         }
 

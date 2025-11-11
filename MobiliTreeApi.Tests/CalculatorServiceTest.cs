@@ -1,10 +1,6 @@
 ﻿using MobiliTreeApi.Repositories;
 using MobiliTreeApi.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MobiliTreeApi.Tests

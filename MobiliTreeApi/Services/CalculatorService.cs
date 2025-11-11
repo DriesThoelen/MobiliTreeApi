@@ -1,8 +1,8 @@
 ﻿using MobiliTreeApi.Domain;
 using MobiliTreeApi.Helper;
-using MobiliTreeApi.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MobiliTreeApi.Services
 {
@@ -20,23 +20,27 @@ namespace MobiliTreeApi.Services
 
             if (serviceProfile == null)
             {
-                throw new ArgumentException($"Invalid parking facility id");
+                throw new ArgumentNullException($"Invalid parking facility id");
             }
 
-            foreach (var session in sessions)
-            {
-                if (session == null)
-                {
-                    throw new ArgumentNullException($"Invalid session");
-                }
+            if (sessions == null) {
+                throw new ArgumentNullException($"Invalid sessions");
+            }
 
+            if (customer == null)
+            {
+                throw new ArgumentNullException($"Invalid customer");
+            }
+
+            foreach (var session in sessions.Where(s => s != null && !string.IsNullOrEmpty(s.CustomerId) && !string.IsNullOrEmpty(s.ParkingFacilityId)))
+            {
                 amount += CalculateTimeslotCost(serviceProfile, session.StartDateTime, session.EndDateTime, customer, session.ParkingFacilityId);
             }
 
             return amount;
         }
 
-        public decimal CalculateTimeslotCost(ServiceProfile serviceProfile, DateTime startDate, DateTime endDate, Customer customer, string parkingFacilityId)
+        public decimal CalculateTimeslotCost(ServiceProfile serviceProfile, DateTime startDate, DateTime endDate, Customer customer, string parkingFacilityId) //Facade pattern
         {
             var amount = 0M;
             var actualTimeSlots = new List<ActualTimeSlot>();
@@ -63,7 +67,7 @@ namespace MobiliTreeApi.Services
                             StartTimeSlotDateTime = startDate < startTimeSlotDateTime ? startTimeSlotDateTime : startDate,
                             EndTimeSlotDateTime = endTimeSlotDateTime < endDate ? endTimeSlotDateTime : endDate,
                             PricePerHour = timeslots[i].PricePerHour
-                        });
+                        }); //Adapter pattern
                     }
                 }
 
@@ -81,12 +85,10 @@ namespace MobiliTreeApi.Services
             return amount;
         }
 
-
-
-        private IList<TimeslotPrice> GetAppropriateTimeslotsFromServiceProfile(ServiceProfile serviceProfile, DateOnly date, Customer customer, string parkingFacilityId)
+        private IList<TimeslotPrice> GetAppropriateTimeslotsFromServiceProfile(ServiceProfile serviceProfile, DateOnly date, Customer customer, string parkingFacilityId) //Strategy pattern
         {
-            bool isWeekend = DateHelper.IsWeekend(date);
-            if (customer.ContractedParkingFacilityIds?.Contains(parkingFacilityId) ?? false)
+            bool isWeekend = DateHelper.IsWeekend(date); //Refactor idea: use state pattern
+            if (customer.ContractedParkingFacilityIds?.Contains(parkingFacilityId) ?? false) //Refactor idea: use state pattern
             {
                 if (isWeekend)
                 {
